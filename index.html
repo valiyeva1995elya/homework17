@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Create color</h1>
+    <div class="create-color"> <input id="name" type="text" placeholder="Name of color">
+        <p class="error"></p> <select>
+            <option>RGB</option>
+            <option>RGBA</option>
+            <option>HEX</option>
+        </select>
+        <p></p> <input id="color" type="text" placeholder="Color">
+        <p class="error"></p> <button onclick="saveColor()">Save</button>
+    </div>
+    <h1>All colors</h1>
+    <div class="all-colors"> </div>
+    <script>
+        let colors
+        if (localStorage.colors) {
+            colors = JSON.parse(localStorage.getItem("colors"))
+        } else { colors = [] }
+        displayColors()
+        function saveColor() {
+            const color = { name: document.querySelector("#name").value, type: document.querySelector("select").value, code: document.querySelector("#color").value, }
+            colors.push(color)
+            localStorage.setItem("colors", JSON.stringify(colors))
+            displayColors()
+        }
+        function displayColors() {
+            let blocks = ""
+            for (let i = 0; i < colors.length; i++) {
+                let block = `<div class='color' style='background-color: ${getColorCode(colors[i].type, colors[i].code)}'> <div class='inner-text'> <p>${colors[i].name}</p> <p>${colors[i].type}</p> <p>${colors[i].code}</p> </div> </div > ` 
+                blocks += block;
+            }
+            let allColors = document.querySelector(".all-colors")
+            allColors.innerHTML = blocks
+        }
+        function getColorCode(type, code) {
+            if (type === 'RGBA') {
+                let arr = code.split(", ")
+                return `rgba(${arr[0]}, ${arr[1]}, ${arr[2]}, ${arr[3]})`
+            } else if (type === 'RGB') {
+                let arr = code.split(", ") 
+                return `rgb(${arr[0]}, ${arr[1]}, ${arr[2]})`
+            } else { return code }
+        } </script>
+</body>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        display: grid;
+        align-items: center;
+        text-align: center;
+    }
+
+    .all-colors {
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+    }
+
+    .inner-text {
+        width: 150px;
+        height: 150px;
+        display: grid;
+        align-items: center;
+        justify-content: center;
+        color: black;
+    }
+
+    .color {
+        width: 300px;
+        height: 300px;
+        display: grid;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+</html>
